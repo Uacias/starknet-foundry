@@ -47,31 +47,36 @@ mod get_addr_tests {
     #[test]
     fn new_constructor_args_yields_expected_address() {
         // 1) salt - use the same with sncast
-        let salt = Felt::from_hex_unchecked("0x666");
+        let salt = Felt::from_hex_unchecked("0x123");
         // 2) class hash of privacy
         let class_hash = Felt::from_hex_unchecked(
-            "0x069a30e4c1deff60d7c19184ecccf8f1db30295aaed4d7ea5652d40075b3ff89",
+            "0x02287b34a375448b9a263f49ac4b46c4da4007f774c5c529ed4cf3a0c5bfff56",
         );
         // 3) deployer - it's fine, leave it as 0
         let deployer = Felt::ZERO;
         // 4) calldata
         let constructor_calldata = &[
             Felt::from_hex_unchecked(
-                "0x064fa47c02430E5d69c0c5d340e23397bca308f7B9d85247565fc91F2C2aD2f2", // owner
+                "0x0796810235fC228FbBC232b3070135823490e9e3d61781969d7C5eD890d2c468", // admin
             ),
             Felt::from_hex_unchecked(
-                "0x045593366c8421de54531d304da34f4e85dbcd30191d6941973dbd7f3a71c4da", // execute verifier
+                "0x0796810235fC228FbBC232b3070135823490e9e3d61781969d7C5eD890d2c468", // upgrader
+            ),
+            Felt::from_hex_unchecked(
+                "0x076d5ef47375ddcfff2e2cf2f3c0bd951d6aa3be85562951d729888e3f36a7d9", // recursive verifier
             ),
             Felt::from_hex_unchecked(
                 "0x4718f5a0fc34cc1af16a1cdee98ffb20c31f5cd61d6ab07201858f4287c938d", // strk address
             ),
-            Felt::from_hex_unchecked("0x2b5e3af16b1880000"), // 50 STRK initial buffer
+            Felt::from_hex_unchecked("0x4563918244F40000"), // 5 STRK initial buffer
             Felt::from_hex_unchecked("0x0"),
-            Felt::from_hex_unchecked("0x22d68309d6cc"), // gas price get this from https://www.alchemy.com/docs/node/starknet/starknet-api-endpoints/starknet-get-block-with-tx-hashes?explorer=true
+            Felt::from_hex_unchecked("0x3e30fb297e5d"), // gas price get this from https://www.alchemy.com/docs/node/starknet/starknet-api-endpoints/starknet-get-block-with-tx-hashes?explorer=true
             Felt::from_hex_unchecked("0x0"),
             Felt::from_hex_unchecked("0x61a8"), // gas consumed for merge
             Felt::from_hex_unchecked("0x6590"), // gas consumed for transfer
         ];
+
+        println!("Calldata {:?}", constructor_calldata);
 
         let addr = get_contract_address(salt, class_hash, constructor_calldata, deployer);
         let a2 = PaddedFelt(addr);
